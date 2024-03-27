@@ -3,6 +3,8 @@
 #include <fstream>
 #include <sstream>
 #include <iostream>
+#include <thread>
+#include <chrono>
 
 std::ifstream openFile(const std::string &filename);
 
@@ -215,5 +217,8 @@ void Simulator::run(const std::string &filename)
         std::cout << "current number of passengers: " << elevator.get_passengers().size() << ", ";
         std::cout << "current state: " << elevator.get_state() << ", ";
         std::cout << "current destinations: " << elevator.get_destination_floor() << std::endl;
+
+        // time delay by argument.
+        std::this_thread::sleep_for(std::chrono::milliseconds(this->millisecondsDelay));
     }
 }
