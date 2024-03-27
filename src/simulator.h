@@ -1,20 +1,23 @@
 #pragma once
 
+#include "building.h"
+
 #include <string>
+#include <vector>
+#include <map>
 
 class Simulator {
 public:
     Simulator(int millisecondsDelay);
 
 public:
-    void initializeFromFile(const std::string& filename);
-    void run();
+    void run(const std::string& filename);
     void printResults() const;
 
 private:
-    void parseElevators(std::ifstream& file);
-    void parsePassengers(std::ifstream& file);
-    void parseInputs(std::ifstream& file);
+    Building getBuildingFromFile(std::ifstream& file);
+    std::vector<Passenger> getPassengersFromFile(std::ifstream& file);
+    std::vector<std::map<std::string, int>> getElevatorInfoFromFile(std::ifstream& file);
 
 private:
     int millisecondsDelay;
