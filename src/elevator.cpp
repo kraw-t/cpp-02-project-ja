@@ -51,4 +51,6 @@ std::string Elevator::get_state() const {
     return state;
 }
 
-
+int Elevator::get_elevator_capacity() const {
+    return elevatorCapacity;
+}

@@ -18,9 +18,10 @@ public:
     std::vector<Passenger> get_passengers() const;
     void set_state(const std::string state);
     std::string get_state() const;
+    int get_elevator_capacity() const;
 
 private:
-    int elevatorCapacity = 50;
+    int elevatorCapacity;
     int current_floor = 0;
     int current_weight = 0;
     int destination_floor = 0;
