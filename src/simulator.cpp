@@ -102,7 +102,7 @@ std::vector<std::map<std::string, int>> Simulator::getElevatorInfoFromFile(std::
 
 void Simulator::run(const std::string &filename)
 {
-    // Intialize.
+    // Initialize.
     auto file{openFile(filename)};
     Building building = getBuildingFromFile(file);
     std::vector<Passenger> passengers = getPassengersFromFile(file);
@@ -110,13 +110,11 @@ void Simulator::run(const std::string &filename)
     Elevator elevator = building.get_elevator();
     // Main loop.
     int time_count = 0;
-    int index = 0;
     std::vector<int> destinations;
     while (1)
     {
         bool finish_flag = true;
         int current_floor = elevator.get_current_floor();
-        int current_weight = elevator.get_current_weight();
 
         for (auto &info : elevator_info_vector)
         {
@@ -135,16 +133,22 @@ void Simulator::run(const std::string &filename)
             if (time_count >= info["time"] && current_floor == info["pickUpFloor"] && info["isPickedUp"] == 0)
             {
                 int passenger_weight = 0;
+                Passenger picked_up_passenger(0, 0);
                 for (auto &passenger : passengers)
                 {
                     if (passenger.get_id() == info["id"])
                     {
                         passenger_weight = passenger.get_weight();
-                        elevator.set_passengers(passenger);
+                        picked_up_passenger = passenger;
                         break;
                     }
                 }
-                elevator.set_current_weight(current_weight + passenger_weight);
+                if ( (elevator.get_current_weight() + passenger_weight) > elevator.get_elevator_capacity()){
+                    std::cout << "Elevator is over capacity. Person ID " << info["id"] << " could not be picked up." << std::endl;
+                    continue;
+                }
+                elevator.set_passengers(picked_up_passenger);
+                elevator.set_current_weight(elevator.get_current_weight() + passenger_weight);
                 std::cout << "Passenger ID " << info["id"] << " picked up." << std::endl;
                 info["isPickedUp"] = 1;
                 if (current_floor == elevator.get_destination_floor())
@@ -170,7 +174,7 @@ void Simulator::run(const std::string &filename)
                         break;
                     }
                 }
-                elevator.set_current_weight(current_weight - passenger_weight);
+                elevator.set_current_weight(elevator.get_current_weight() - passenger_weight);
                 std::cout << "Passenger ID " << info["id"] << " dropped off." << std::endl;
                 info["isDroppedOff"] = 1;
                 if (destinations.size() == 0)
