@@ -4,7 +4,8 @@
 #include <string>
 #include <iostream>
 
-std::string getUsageMessage() {
+std::string getUsageMessage()
+{
     return {
         "\n"
         "使用方法:\n"
@@ -35,20 +36,22 @@ std::string getUsageMessage() {
         "\n"
         "ミリ秒単位の時間:\n"
         "    省略可能です。シミュレーションの各ステップ間の遅延をミリ秒単位で指定します。"
-        "\n"
-    };
+        "\n"};
 }
 
-int main(int argc, char **argv) {
-    try {
-        ArgumentParser argParser { argc, argv, getUsageMessage() };
-        const auto filename { argParser.get<std::string>() };
-        const auto millisecondsDelay { argParser.getOptional<int>(0) };
+int main(int argc, char **argv)
+{
+    try
+    {
+        ArgumentParser argParser{argc, argv, getUsageMessage()};
+        const auto filename{argParser.get<std::string>()};
+        const auto millisecondsDelay{argParser.getOptional<int>(0)};
 
-        Simulator simulator { millisecondsDelay };
-        simulator.initializeFromFile(filename);
-        simulator.run();
-    } catch (const std::runtime_error& exception) {
+        Simulator simulator{millisecondsDelay};
+        simulator.run(filename);
+    }
+    catch (const std::runtime_error &exception)
+    {
         std::cout << exception.what() << std::endl;
     }
 }
