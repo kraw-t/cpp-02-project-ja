@@ -122,13 +122,33 @@ void Simulator::run(const std::string &filename)
         {
             if (info["time"] == time_count && info["isPickedUp"] == 0)
             {
-                destinations.push_back(info["pickUpFloor"]);
-                std::cout << "Passenger ID " << info["id"] << " called the elevator." << std::endl;
-                if (elevator.get_state() == "waiting")
+                bool too_heavy_flag = false;
+                for (auto &passenger : passengers)
                 {
-                    elevator.set_destination_floor(destinations[0]);
-                    destinations.erase(destinations.begin());
-                    elevator.set_state("sending");
+                    if (passenger.get_id() == info["id"])
+                    {
+                        int check_weight = passenger.get_weight();
+                        if (check_weight > elevator.get_elevator_capacity())
+                        {
+                            std::cout << "Passenger ID " << info["id"] << " called the elevator. ";
+                            std::cout << "But he is too heavy and cannot be picked up." << std::endl;
+                            info["isPickedUp"] = 1;
+                            info["isDroppedOff"] = 1;
+                            too_heavy_flag = true;
+                        }
+                        break;
+                    }
+                }
+                if (!too_heavy_flag)
+                {
+                    destinations.push_back(info["pickUpFloor"]);
+                    std::cout << "Passenger ID " << info["id"] << " called the elevator." << std::endl;
+                    if (elevator.get_state() == "waiting")
+                    {
+                        elevator.set_destination_floor(destinations[0]);
+                        destinations.erase(destinations.begin());
+                        elevator.set_state("sending");
+                    }
                 }
             }
 
@@ -145,7 +165,8 @@ void Simulator::run(const std::string &filename)
                         break;
                     }
                 }
-                if ( (elevator.get_current_weight() + passenger_weight) > elevator.get_elevator_capacity()){
+                if ((elevator.get_current_weight() + passenger_weight) > elevator.get_elevator_capacity())
+                {
                     std::cout << "Elevator is over capacity. Person ID " << info["id"] << " could not be picked up." << std::endl;
                     continue;
                 }
