@@ -53,7 +53,10 @@ Simulation設定ファイルのパスを入れてください。
    1. 人が乗った場合：乗った人のIDと `picked up` を表示します
    1. 人が降りた場合：降りた人のIDと `dropped off` を表示します
    1. 乗ろうとしたが重量オーバーの場合：乗れなかった人のIDと `Elevator is over capacity. Person ID * could not be picked up.` を表示します。
-1. シミュレーション終了時：`All the persons are dropped off. End simulation.` を表示します。
+1. シミュレーション終了時：`All the persons are dropped off. End simulation.` を表示します
+1. エラー発生時は以下のメッセージを表示します
+   1. 2機以上エレベーターを設定しようとした場合 `This simulator works only for one elevator.` を表示し、シミュレータを終了します
+   1. エレベーターの最大積載量よりも重い人が居る場合 `But he is too heavy and cannot be picked up.` を表示し、以降この人を無視してシミュレーションを継続します
 
 ### 現バージョンの制約事項
 
